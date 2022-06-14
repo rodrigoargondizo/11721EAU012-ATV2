@@ -98,6 +98,10 @@ uint32_t *pGPIOA_PUPDR = (uint32_t *) STM32_GPIOA_PUPDR;
 uint32_t *pGPIOA_BSRR = (uint32_t *)STM32_GPIOA_BSRR;
 uint32_t *pGPIOA_IDR = (uint32_t *)STM32_GPIOA_IDR;
 
+/* Habilita clock GPIOA */
+reg = *pRCC_AHB1ENR;
+reg |= RCC_AHB1ENR_GPIOAEN;
+*pRCC_AHB1ENR = reg;
 
 /* Habilita clock GPIOC */
 reg = *pRCC_AHB1ENR;
