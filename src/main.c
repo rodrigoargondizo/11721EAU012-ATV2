@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /* AHB1 Base Addresses ******************************************************/
 #define STM32_RCC_BASE 0x40023800       /* 0x40023800-0x40023bff: Reset and Clock control RCC */
@@ -71,12 +72,12 @@
 
 /* GPIO port bit set/reset register */
 #define GPIO_BSRR_SET(n) (1 << (n))
-#define GPIO_BSRR_RST(n) (1 << (n + 16))
+#define GPIO_BSRR_RESET(n) (1 << (n + 16))
 
 #define LED_DELAY 20000
 #define LED_DELAY2 (3*(20000))
 
-static uint32_t led_status;
+
 
 int main(int argc, char *argv[])
 {
@@ -95,6 +96,8 @@ uint32_t *pGPIOA_MODER = (uint32_t *) STM32_GPIOA_MODER;
 uint32_t *pGPIOA_OTYPER = (uint32_t *)STM32_GPIOA_OTYPER;
 uint32_t *pGPIOA_PUPDR = (uint32_t *) STM32_GPIOA_PUPDR;
 uint32_t *pGPIOA_BSRR = (uint32_t *)STM32_GPIOA_BSRR;
+uint32_t *pGPIOA_IDR = (uint32_t *)STM32_GPIOA_IDR;
+
 
 /* Habilita clock GPIOC */
 reg = *pRCC_AHB1ENR;
@@ -138,12 +141,33 @@ reg |= (GPIO_PUPDR_NONE << GPIO_PUPDR13_SHIFT);
 
 while(1)
 {
-*pGPIOC_BSRR = GPIO_BSRR_SET(13);
-led_status = 0;
-for(uint32_t i = 0; i < LED_DELAY; i++);
-*pGPIOC_BSRR = GPIO_BSRR_RST(13);
-led_status = 1;
-for(uint32_t i = 0; i < LED_DELAY; i++);
+        bool pressed;
+
+        if(((*pGPIOA_IDR) & 0X01)== 0)
+            pressed = true;
+        else
+            pressed = false;
+    
+        if (pressed)
+        {
+
+        *pGPIOC_BSRR = GPIO_BSRR_RESET(13);
+        for(uint32_t i = 0; i < LED_DELAY; i++);
+
+        *pGPIOC_BSRR = GPIO_BSRR_SET(13);
+        for(uint32_t i = 0; i < LED_DELAY; i++);
+
+        }
+        else
+        {
+
+        *pGPIOC_BSRR = GPIO_BSRR_RESET(13);
+        for(uint32_t i = 0; i < LED_DELAY2; i++);
+
+        *pGPIOC_BSRR = GPIO_BSRR_SET(13);
+        for(uint32_t i = 0; i < LED_DELAY2; i++);
+
+        }
 }
 return EXIT_SUCCESS;
 }
