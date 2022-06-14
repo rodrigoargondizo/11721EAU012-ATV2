@@ -2,4 +2,4 @@
 
 Atividade 2 - Sistemas Embarcados 1 
 
-ambiente de trabalho com os vetores atualizados e o main.c pronto pra piscar o led. 
+ambiente de trabalho com os vetores atualizados e o main.c pronto pra ler o pino de entrada. 
