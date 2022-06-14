@@ -5,6 +5,8 @@
 #define SRAM_END ((SRAM_START) + (SRAM_SIZE)) /* Final da SRAM STM32F411 */
 #define STACK_START SRAM_END /* Inicio da Stack */
 
+
+/* declaração das variáveis dos vetores de interrupção stm32401f */
 int main(void);
 
 void reset_handler(void);
